@@ -41,17 +41,18 @@ let colors = [
       .append("div")
       .attr("id", "tree-map");
 
-scaleBody();
-scaleBody();
-
-window.addEventListener("resize", scaleBody);
-
 function scaleBody() {
+  console.log(window.outerWidth + " " + window.innerWidth);
   let body = d3.select("body");
   body
     .style("transform", "scale(" + window.innerWidth / 1200 + ")")
     .style("transform-origin", "0 0");
 }
+
+window.onload = scaleBody();
+
+window.addEventListener("resize", scaleBody);
+
 let files = [
   "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json",
   "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json",
