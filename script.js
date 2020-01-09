@@ -31,6 +31,15 @@ let colors = [
   "#ffffff",
   "#000000"
 ];
+    d3
+      .select("body")
+      .append("div")
+      .attr("class", "main");
+
+    d3
+      .select(".main")
+      .append("div")
+      .attr("id", "tree-map");
 
 scaleBody();
 scaleBody();
@@ -96,17 +105,6 @@ let formatter = new Intl.NumberFormat('en-US', {
         description = localStorage.getItem("description");
     }
     let data = values[choice];
-
-    d3
-      .select("body")
-      .append("div")
-      .attr("class", "main");
-
-    d3
-      .select(".main")
-      .append("div")
-      .attr("id", "tree-map");
-
     
     d3
       .select("#tree-map")
