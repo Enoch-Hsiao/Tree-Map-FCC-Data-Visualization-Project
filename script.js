@@ -5,8 +5,8 @@ let numColors;
 let buttonChoice; //saved data after refresh
 let buttonTitle;
 let buttonDescription;
-let title = "Video Game Sales"
-let description = "Top 100 Most Sold Video Games Grouped by Platform"
+let title = "Video Game Sales";
+let description = "Top 100 Most Sold Video Games Grouped by Platform";
 let colors = [
   "#e6194b",
   "#3cb44b",
@@ -31,20 +31,9 @@ let colors = [
   "#ffffff",
   "#000000"
 ];
-    d3
-      .select("body")
-      .append("div")
-      .attr("class", "main");
-
-    d3
-      .select(".main")
-      .append("div")
-      .attr("id", "tree-map");
-
-
-
 
 function scaleBody() {
+  console.log(alert(window.onload));
   console.log(window.outerWidth + " " + window.innerWidth);
   let body = d3.select("body");
   body
@@ -56,6 +45,9 @@ window.addEventListener ?
 window.addEventListener("load",scaleBody,false) : 
 window.attachEvent && window.attachEvent("onload", scaleBody);
 
+window.onload = scaleBody();
+
+window.addEventListener("resize", scaleBody);
 
 let files = [
   "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json",
@@ -73,19 +65,28 @@ files.forEach(function(url) {
 function button1() {
   buttonChoice = localStorage.setItem("choice", 0);
   buttonTitle = localStorage.setItem("title", "Video Game Sales");
-  buttonDescription = localStorage.setItem("description", "Top 100 Most Sold Video Games Grouped by Platform");
+  buttonDescription = localStorage.setItem(
+    "description",
+    "Top 100 Most Sold Video Games Grouped by Platform"
+  );
   refreshPage();
 }
 function button2() {
   buttonChoice = localStorage.setItem("choice", 1);
   buttonTitle = localStorage.setItem("title", "Movie Sales");
-  buttonDescription = localStorage.setItem("description", "Highest Grossing Movies in the U.S. by Genre");
+  buttonDescription = localStorage.setItem(
+    "description",
+    "Highest Grossing Movies in the U.S. by Genre"
+  );
   refreshPage();
 }
 function button3() {
   buttonChoice = localStorage.setItem("choice", 2);
   buttonTitle = localStorage.setItem("title", "Kickstarter Campaigns");
-  buttonDescription = localStorage.setItem("description", "Highest Funded Products by Category");
+  buttonDescription = localStorage.setItem(
+    "description",
+    "Highest Funded Products by Category"
+  );
   refreshPage();
 }
 
@@ -94,129 +95,140 @@ function refreshPage() {
 }
 
 //Currency formatter
-let formatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
+let formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD"
 });
 
-  Promise.all(promises).then(function(values) {
-    if (localStorage.getItem("choice") != null) {
-      choice = localStorage.getItem("choice");
-    }
-    if (localStorage.getItem("title") != null) {
-        title = localStorage.getItem("title");
-    }
-    if (localStorage.getItem("description") != null) {
-        description = localStorage.getItem("description");
-    }
-        d3
-      .select("#tree-map")
-      .append("h1")
-      .attr("id", "title")
-      .html(title);
+Promise.all(promises).then(function(values) {
+  if (localStorage.getItem("choice") != null) {
+    choice = localStorage.getItem("choice");
+  }
+  if (localStorage.getItem("title") != null) {
+    title = localStorage.getItem("title");
+  }
+  if (localStorage.getItem("description") != null) {
+    description = localStorage.getItem("description");
+  }
+  d3
+    .select("body")
+    .append("div")
+    .attr("class", "main");
 
-    d3
-      .select("#tree-map")
-      .append("h2")
-      .attr("id", "description")
-      .html(description);
-    
-    let data = values[choice];
+  d3
+    .select(".main")
+    .append("div")
+    .attr("id", "tree-map");
 
-    const svg = d3 //white container
-      .select("#tree-map")
-      .append("svg")
-      .attr("width", "auto")
-      .attr("height", 800)
-      .attr("class", "mainbox");
+  d3
+    .select("#tree-map")
+    .append("h1")
+    .attr("id", "title")
+    .html(title);
 
-    let categories = [];
-    for (let i = 0; i < data.children.length; i++) {
-      categories.push(data.children[i].name);
-    }
-    
-    numColors = categories.length;
+  d3
+    .select("#tree-map")
+    .append("h2")
+    .attr("id", "description")
+    .html(description);
 
-    let root = d3
-      .hierarchy(data)
-      .sum(d => d.value)
-      .sort((a, b) => b.height - a.height || b.value - a.value);
+  let data = values[choice];
 
-    let treemapLayout = d3.treemap();
+  const svg = d3 //white container
+    .select("#tree-map")
+    .append("svg")
+    .attr("width", "auto")
+    .attr("height", 800)
+    .attr("class", "mainbox");
 
-    treemapLayout
-      .size([1000, 600])
-      .paddingOuter(2)
-      .paddingInner(1)
-      .tile(d3.treemapBinary);
+  let categories = [];
+  for (let i = 0; i < data.children.length; i++) {
+    categories.push(data.children[i].name);
+  }
 
-    root.sum(function(d) {
-      return d.value;
+  numColors = categories.length;
+
+  let root = d3
+    .hierarchy(data)
+    .sum(d => d.value)
+    .sort((a, b) => b.height - a.height || b.value - a.value);
+
+  let treemapLayout = d3.treemap();
+
+  treemapLayout
+    .size([1000, 600])
+    .paddingOuter(2)
+    .paddingInner(1)
+    .tile(d3.treemapBinary);
+
+  root.sum(function(d) {
+    return d.value;
+  });
+
+  treemapLayout(root);
+
+  let cell = svg
+    .selectAll("g")
+    .data(root.leaves())
+    .enter()
+    .append("g")
+    .attr("transform", function(d) {
+      return "translate(" + [d.x0 + 50, d.y0 + 200] + ")";
     });
 
-    treemapLayout(root);
+  cell
+    .append("rect")
+    .attr("id", d => d.data.id)
+    .attr("class", "tile")
+    .attr("width", d => d.x1 - d.x0)
+    .attr("height", d => d.y1 - d.y0)
+    .attr("fill", d => colors[categories.indexOf(d.data.category)])
+    .attr("data-name", d => d.data.name)
+    .attr("data-category", d => d.data.category)
+    .attr("data-value", d => d.data.value)
+    .on("mouseover", showToolTip)
+    .on("mousemove", moveToolTip)
+    .on("mouseout", hideToolTip);
 
-    let cell = svg
-      .selectAll("g")
-      .data(root.leaves())
-      .enter()
-      .append("g")
-      .attr("transform", function(d) {
-        return "translate(" + [d.x0 + 50, d.y0 + 200] + ")";
-      });
+  let font = 6;
+  if (choice == 2) {
+    font = 5;
+  }
+  cell
+    .append("text")
+    .attr("id", (d, i) => "tile-text" + i)
+    .attr("class", "tile-text")
+    .style("font-size", d => (d.x1 - d.x0) * (d.y1 - d.y0) / 1500 + font + "px")
+    .selectAll("tspan")
+    .data(d => d.data.name)
+    .enter()
+    .append("tspan")
+    .text(d => d);
 
-    cell
-      .append("rect")
-      .attr("id", d => d.data.id)
-      .attr("class", "tile")
-      .attr("width", d => d.x1 - d.x0)
-      .attr("height", d => d.y1 - d.y0)
-      .attr("fill", d => colors[categories.indexOf(d.data.category)])
-      .attr("data-name", d => d.data.name)
-      .attr("data-category", d => d.data.category)
-      .attr("data-value", d => d.data.value)
-      .on("mouseover", showToolTip)
-      .on("mousemove", moveToolTip)
-      .on("mouseout", hideToolTip);
+  for (let i = 0; i < root.leaves().length; i++) {
+    d3plus
+      .textwrap()
+      .container("#tile-text" + i)
+      .draw();
+  }
 
-   let font = 6; 
-   if(choice == 2){
-     font = 5;
-   }
-    cell
-      .append("text")
-      .attr("id", (d, i) => "tile-text" + i)
-      .attr("class", "tile-text")
-      .style("font-size", d => (d.x1 - d.x0) * (d.y1 - d.y0) / 1500 + font + "px")
-      .selectAll("tspan")
-      .data(d => d.data.name)
-      .enter()
-      .append("tspan")
-      .text(d => d);
+  let tooltip = d3
+    .select("#tree-map")
+    .append("div")
+    .attr("id", "tooltip");
 
-    for (let i = 0; i < root.leaves().length; i++) {
-      d3plus
-        .textwrap()
-        .container("#tile-text" + i)
-        .draw();
-    }
-
-    let tooltip = d3
-      .select("#tree-map")
-      .append("div")
+  function showToolTip(d, i) {
+    tooltip
+      .transition()
+      .duration(0)
+      .style("visibility", "visible")
+      .attr("data-value", d.data.value)
       .attr("id", "tooltip");
 
-    function showToolTip(d, i) {
-      tooltip
-        .transition()
-        .duration(0)
-        .style("visibility", "visible")
-        .attr("data-value", d.data.value)
-        .attr("id", "tooltip");
-
-      tooltip.html(function(){
-        if(choice == 0){
-        return "Name: </br>" +
+    tooltip.html(function() {
+      if (choice == 0) {
+        return (
+          "Name: </br>" +
           d.data.name +
           "<br>" +
           "Category: " +
@@ -225,194 +237,207 @@ let formatter = new Intl.NumberFormat('en-US', {
           "Copies Sold: " +
           d.data.value +
           " million"
-        } else if(choice == 1){
-        return "Name: </br>" +
+        );
+      } else if (choice == 1) {
+        return (
+          "Name: </br>" +
           d.data.name +
           "<br>" +
           "Category: " +
           d.data.category +
           "<br>" +
           "Amount Grossed: " +
-         formatter.format(d.data.value).substring(0, formatter.format(d.data.value).length - 3) + " USD"
-      } else if(choice == 2){
-       return  "Name: </br>" +
+          formatter
+            .format(d.data.value)
+            .substring(0, formatter.format(d.data.value).length - 3) +
+          " USD"
+        );
+      } else if (choice == 2) {
+        return (
+          "Name: </br>" +
           d.data.name +
           "<br>" +
           "Category: " +
           d.data.category +
           "<br>" +
           "Amount Funded: " +
-          formatter.format(d.data.value).substring(0, formatter.format(d.data.value).length - 3) + " USD"
-      }});
-    }
-
-    function moveToolTip(d, i) {
-      tooltip.style("top", d.y0 + 112.5 + "px").style("left", function() {
-        if (d.x0 > 900) {
-          return d.x0 - 100 + "px";
-        } else if (d.x0 > 836) {
-          return d.x0 - 30 + "px";
-        } else {
-          return d.x0 + 50 + "px";
-        }
-      });
-    }
-
-    function hideToolTip(d, i) {
-      tooltip.style("visibility", "hidden");
-    }
-    //legend split into 2 rows for Video Game Sales
-    if (choice == 0) {
-      let legend = svg.attr("id", "legend");
-      for (let i = 0; i < Math.floor(numColors / 2); i++) {
-        legend
-          .append("rect")
-          .attr("class", "legend-item")
-          .attr("x", 110 * i + 45)
-          .attr("y", 100)
-          .attr("width", 30)
-          .attr("height", 30)
-          .attr("fill", colors[i])
-          .style("stroke-width", "1.5")
-          .style("stroke", "black");
-
-        svg
-          .append("text")
-          .attr("x", 110 * i + 90)
-          .attr("y", 123)
-          .text(categories[i])
-          .style("font-size", "20px");
+          formatter
+            .format(d.data.value)
+            .substring(0, formatter.format(d.data.value).length - 3) +
+          " USD"
+        );
       }
+    });
+  }
 
-      for (let i = Math.floor(numColors / 2); i < numColors; i++) {
-        legend
-          .append("rect")
-          .attr("x", 110 * (i - Math.floor(numColors / 2)) + 45)
-          .attr("y", 160)
-          .attr("width", 30)
-          .attr("height", 30)
-          .attr("fill", colors[i])
-          .style("stroke-width", "1.5")
-          .style("stroke", "black");
-
-        svg
-          .append("text")
-          .attr("x", 110 * (i - Math.floor(numColors / 2)) + 90)
-          .attr("y", 182)
-          .text(categories[i])
-          .style("font-size", "20px");
+  function moveToolTip(d, i) {
+    tooltip.style("top", d.y0 + 112.5 + "px").style("left", function() {
+      if (d.x0 > 900) {
+        return d.x0 - 100 + "px";
+      } else if (d.x0 > 836) {
+        return d.x0 - 30 + "px";
+      } else {
+        return d.x0 + 50 + "px";
       }
+    });
+  }
+
+  function hideToolTip(d, i) {
+    tooltip.style("visibility", "hidden");
+  }
+  //legend split into 2 rows for Video Game Sales
+  if (choice == 0) {
+    let legend = svg.attr("id", "legend");
+    for (let i = 0; i < Math.floor(numColors / 2); i++) {
+      legend
+        .append("rect")
+        .attr("class", "legend-item")
+        .attr("x", 110 * i + 45)
+        .attr("y", 100)
+        .attr("width", 30)
+        .attr("height", 30)
+        .attr("fill", colors[i])
+        .style("stroke-width", "1.5")
+        .style("stroke", "black");
+
+      svg
+        .append("text")
+        .attr("x", 110 * i + 90)
+        .attr("y", 123)
+        .text(categories[i])
+        .style("font-size", "20px");
     }
-    
-      if (choice == 1) {
-      let legend = svg.attr("id", "legend");
-      for (let i = 0; i < numColors; i++) {
-        legend
-          .append("rect")
-          .attr("class", "legend-item")
-          .attr("x", 150 * i + 35)
-          .attr("y", 110)
-          .attr("width", 30)
-          .attr("height", 30)
-          .attr("fill", colors[i])
-          .style("stroke-width", "1.5")
-          .style("stroke", "black");
 
-        svg
-          .append("text")
-          .attr("x", 150 * i + 75)
-          .attr("y", 133)
-          .text(categories[i])
-          .style("font-size", "17.5px");
-      }
+    for (let i = Math.floor(numColors / 2); i < numColors; i++) {
+      legend
+        .append("rect")
+        .attr("x", 110 * (i - Math.floor(numColors / 2)) + 45)
+        .attr("y", 160)
+        .attr("width", 30)
+        .attr("height", 30)
+        .attr("fill", colors[i])
+        .style("stroke-width", "1.5")
+        .style("stroke", "black");
 
-   }
-    
-     if (choice == 2) {
-      let legend = svg.attr("id", "legend");
-      for (let i = 0; i < Math.floor(numColors / 2); i++) {
-        
-        legend
-          .append("rect")
-          .attr("class", "legend-item")
-          .attr("x", function() {
-          if(i < 2){
+      svg
+        .append("text")
+        .attr("x", 110 * (i - Math.floor(numColors / 2)) + 90)
+        .attr("y", 182)
+        .text(categories[i])
+        .style("font-size", "20px");
+    }
+  }
+
+  if (choice == 1) {
+    let legend = svg.attr("id", "legend");
+    for (let i = 0; i < numColors; i++) {
+      legend
+        .append("rect")
+        .attr("class", "legend-item")
+        .attr("x", 150 * i + 35)
+        .attr("y", 110)
+        .attr("width", 30)
+        .attr("height", 30)
+        .attr("fill", colors[i])
+        .style("stroke-width", "1.5")
+        .style("stroke", "black");
+
+      svg
+        .append("text")
+        .attr("x", 150 * i + 75)
+        .attr("y", 133)
+        .text(categories[i])
+        .style("font-size", "17.5px");
+    }
+  }
+
+  if (choice == 2) {
+    let legend = svg.attr("id", "legend");
+    for (let i = 0; i < Math.floor(numColors / 2); i++) {
+      legend
+        .append("rect")
+        .attr("class", "legend-item")
+        .attr("x", function() {
+          if (i < 2) {
             return 140 * i + 35;
-          } else if(i == 2 || i == 3){
+          } else if (i == 2 || i == 3) {
             return 150 * i + 15;
-          } else if(i == 4){
+          } else if (i == 4) {
             return 585;
-          } else if(i == 5){
+          } else if (i == 5) {
             return 665;
-          } else if(i == 6){
+          } else if (i == 6) {
             return 765;
-          }  else if(i == 7){
+          } else if (i == 7) {
             return 895;
           } else {
-            return 980}
+            return 980;
+          }
         })
-          .attr("y", 100)
-          .attr("width", 30)
-          .attr("height", 30)
-          .attr("fill", colors[i])
-          .style("stroke-width", "1.5")
-          .style("stroke", "black");
+        .attr("y", 100)
+        .attr("width", 30)
+        .attr("height", 30)
+        .attr("fill", colors[i])
+        .style("stroke-width", "1.5")
+        .style("stroke", "black");
 
-        svg
-          .append("text")
-          .attr("x", function() {
-           if(i < 2){
+      svg
+        .append("text")
+        .attr("x", function() {
+          if (i < 2) {
             return 140 * i + 68;
-          } else if(i == 2 || i == 3){
+          } else if (i == 2 || i == 3) {
             return 150 * i + 48;
-          } else if(i == 4){
+          } else if (i == 4) {
             return 618;
-          } else if(i == 5){
+          } else if (i == 5) {
             return 698;
-          } else if(i == 6){
+          } else if (i == 6) {
             return 798;
-          } else if(i == 7){
+          } else if (i == 7) {
             return 933;
           } else {
-          return 1013}
+            return 1013;
+          }
         })
-          .attr("y", 123)
-          .text(categories[i])
-          .style("font-size", "12.5px");
-      }
+        .attr("y", 123)
+        .text(categories[i])
+        .style("font-size", "12.5px");
+    }
 
-      for (let i = Math.floor(numColors / 2); i < numColors; i++) {
-        
-        legend
-          .append("rect")
-          .attr("x", function() {
-          if(i > 10 & i < 15){
+    for (let i = Math.floor(numColors / 2); i < numColors; i++) {
+      legend
+        .append("rect")
+        .attr("x", function() {
+          if ((i > 10) & (i < 15)) {
             return 120 * (i - Math.floor(numColors / 2)) + 25;
-          } else if(i> 14 && i < 17){
+          } else if (i > 14 && i < 17) {
             return 80 * (i - Math.floor(numColors / 2)) + 245;
           } else {
-          return 105 * (i - Math.floor(numColors / 2)) + 35}
+            return 105 * (i - Math.floor(numColors / 2)) + 35;
+          }
         })
-          .attr("y", 160)
-          .attr("width", 30)
-          .attr("height", 30)
-          .attr("fill", colors[i])
-          .style("stroke-width", "1.5")
-          .style("stroke", "black");
+        .attr("y", 160)
+        .attr("width", 30)
+        .attr("height", 30)
+        .attr("fill", colors[i])
+        .style("stroke-width", "1.5")
+        .style("stroke", "black");
 
-        svg
-          .append("text")
-          .attr("x", function() {
-          if(i > 10 & i < 15){
+      svg
+        .append("text")
+        .attr("x", function() {
+          if ((i > 10) & (i < 15)) {
             return 120 * (i - Math.floor(numColors / 2)) + 59;
-          } else if(i> 14 && i < 17){
+          } else if (i > 14 && i < 17) {
             return 80 * (i - Math.floor(numColors / 2)) + 280;
           } else {
-          return 105 * (i - Math.floor(numColors / 2)) + 70}
+            return 105 * (i - Math.floor(numColors / 2)) + 70;
+          }
         })
-          .attr("y", 182)
-          .text(categories[i])
-          .style("font-size", "12.5px");
-      }
+        .attr("y", 182)
+        .text(categories[i])
+        .style("font-size", "12.5px");
     }
-  });
+  }
+});
