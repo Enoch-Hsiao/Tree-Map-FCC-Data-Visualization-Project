@@ -43,8 +43,6 @@ window.addEventListener ?
 window.addEventListener("load",scaleBody,false) : 
 window.attachEvent && window.attachEvent("onload", scaleBody);
 
-window.onload = scaleBody();
-
 window.addEventListener("resize", scaleBody);
 
 let files = [
