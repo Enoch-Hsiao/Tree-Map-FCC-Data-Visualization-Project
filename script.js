@@ -33,6 +33,7 @@ let colors = [
 ];
 
 scaleBody();
+scaleBody();
 
 window.addEventListener("resize", scaleBody);
 
