@@ -33,8 +33,6 @@ let colors = [
 ];
 
 function scaleBody() {
-  console.log(alert(window.onload));
-  console.log(window.outerWidth + " " + window.innerWidth);
   let body = d3.select("body");
   body
     .style("transform", "scale(" + window.innerWidth / 1200 + ")")
