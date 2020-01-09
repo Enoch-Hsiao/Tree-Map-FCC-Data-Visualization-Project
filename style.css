@@ -2,8 +2,6 @@ body{
   height: 95vh;
   background-color: gray;
   overflow-x: hidden;
-  transform: scale(width/ 1200);
-  transform-origin: (0,0);
 }
 
 .button1 {
