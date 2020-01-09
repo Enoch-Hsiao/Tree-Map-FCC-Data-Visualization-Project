@@ -41,6 +41,9 @@ let colors = [
       .append("div")
       .attr("id", "tree-map");
 
+
+
+
 function scaleBody() {
   console.log(window.outerWidth + " " + window.innerWidth);
   let body = d3.select("body");
@@ -49,9 +52,10 @@ function scaleBody() {
     .style("transform-origin", "0 0");
 }
 
-window.onload = scaleBody();
+window.addEventListener ? 
+window.addEventListener("load",scaleBody,false) : 
+window.attachEvent && window.attachEvent("onload", scaleBody);
 
-window.addEventListener("resize", scaleBody);
 
 let files = [
   "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json",
@@ -105,9 +109,7 @@ let formatter = new Intl.NumberFormat('en-US', {
     if (localStorage.getItem("description") != null) {
         description = localStorage.getItem("description");
     }
-    let data = values[choice];
-    
-    d3
+        d3
       .select("#tree-map")
       .append("h1")
       .attr("id", "title")
@@ -118,6 +120,8 @@ let formatter = new Intl.NumberFormat('en-US', {
       .append("h2")
       .attr("id", "description")
       .html(description);
+    
+    let data = values[choice];
 
     const svg = d3 //white container
       .select("#tree-map")
