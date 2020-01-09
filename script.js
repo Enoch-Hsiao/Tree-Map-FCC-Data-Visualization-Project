@@ -32,7 +32,7 @@ let colors = [
   "#000000"
 ];
 
-window.onload = scaleBody();
+scaleBody();
 
 window.addEventListener("resize", scaleBody);
 
