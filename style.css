@@ -7,20 +7,23 @@ body{
 .button1 {
   position: absolute;
   z-index: 1;
-  margin-top: 25px;
-  margin-left: 80px;
+   width: 150px;
+  margin-top: 20px;
+  margin-left: 150px;
 }
 .button2 {
   position: absolute;
   z-index: 1;
-  margin-top: 25px;
-  margin-left: 207px;
+  width: 150px;
+  margin-top: 45px;
+  margin-left: 150px;
 }
 .button3 {
   position: absolute;
   z-index: 1;
-  margin-top: 25px;
-  margin-left: 296px;
+  width: 150px;
+  margin-top: 70px;
+  margin-left: 150px;
 }
 svg {
   font: 10px sans-serif;
@@ -46,6 +49,7 @@ svg {
 
 .mainbox{
   margin-top: 150px;
+  
 }
 
 #tree-map{
@@ -53,11 +57,11 @@ svg {
   flex-direction: column;
   text-align: center;
   align-self: center; 
-  background-color: whitesmoke;
   height: 850px;
   width: 1100px;
   box-shadow:  box-shadow: 1px 1px 10px;
   border-radius: 1%;
+  background-color: whitesmoke;
 }
 
 text{
